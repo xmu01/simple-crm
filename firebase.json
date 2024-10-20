@@ -1,0 +1,17 @@
+{
+    "firebase": "angular-fire-2",
+  "public": ".",
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/api",
+      "type": 302
+    }
+  ],
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+} 
+

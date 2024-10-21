@@ -12,6 +12,7 @@ export const appConfig: ApplicationConfig = {
 was leider in der Firebase und GitHub Seite leider nicht erwähnt wird*/
 
 
+/*Klapptirgendwie auch nicht mit environment.firebase, wird rot
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -19,13 +20,66 @@ import { routes } from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { environment } from '../environments/environment.development';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes), provideAnimations(), provideFirebaseApp(() => 
-    initializeApp({apiKey: "AIzaSyBTYYoR_VZzv9QdNErifbeLNMwDgW9tY3o",
-      authDomain: "simple-crm-a0a83.firebaseapp.com",
-      projectId: "simple-crm-a0a83",
-      storageBucket: "simple-crm-a0a83.appspot.com",
-      messagingSenderId: "641795728446",
-      appId: "1:641795728446:web:d8611e4b1af4e86c3c1d6f"})), (provideFirestore(() => getFirestore()))]
+    initializeApp({environment.firebase})), (provideFirestore(() => getFirestore()))]
+}; */
+
+import {
+  ApplicationConfig,
+  InjectionToken,
+  provideZoneChangeDetection,
+} from '@angular/core';
+import { provideRouter } from '@angular/router';
+
+import { routes } from './app.routes';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+
+import { initializeApp } from 'firebase/app';
+import {
+  Firestore,
+  initializeFirestore,
+  connectFirestoreEmulator,
+  getFirestore,
+} from 'firebase/firestore';
+import { getAuth, connectAuthEmulator } from 'firebase/auth';
+import { environment } from '../environments/environment';
+
+const app = initializeApp(environment.firebase);
+
+export const AUTH = new InjectionToken('Firebase auth', {
+  providedIn: 'root',
+  factory: () => {
+    const auth = getAuth();
+    if (environment.useEmulators) {
+      connectAuthEmulator(auth, 'http://localhost:9099', {
+        disableWarnings: true,
+      });
+    }
+    return auth;
+  },
+});
+
+export const FIRESTORE = new InjectionToken('Firebase firestore', {
+  providedIn: 'root',
+  factory: () => {
+    let firestore: Firestore;
+    if (environment.useEmulators) {
+      firestore = initializeFirestore(app, {});
+      connectFirestoreEmulator(firestore, 'localhost', 8080);
+    } else {
+      firestore = getFirestore();
+    }
+    return firestore;
+  },
+});
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+    provideAnimationsAsync(),
+  ],
 };

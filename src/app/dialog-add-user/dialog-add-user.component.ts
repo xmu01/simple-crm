@@ -12,6 +12,9 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 import { MatNativeDateModule } from '@angular/material/core';
 import { User } from '../../models/user.class';
 
+import { Firestore, collection, collectionData, addDoc } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+
 @Component({
   selector: 'app-dialog-add-user',
   standalone: true,
@@ -25,12 +28,32 @@ import { User } from '../../models/user.class';
 })
 export class DialogAddUserComponent {
 
+  firestore: Firestore = inject(Firestore);
+  items$: Observable<any[]>;
+
+  constructor() {
+    const aCollection = collection(this.firestore, 'items')
+    this.items$ = collectionData(aCollection);
+  }
+
+
   user = new User();
   birthDate!: Date;
 
   saveUser() {
     this.user.birthDate = this.birthDate.getTime();
     console.log('Current user is', this.user);
+    
+
+    const usersCollection = collection(this.firestore, 'users');
+    addDoc(usersCollection, this.user.toJSON()).then((result: any) => {
+      console.log('Adding user finished', result);
+    }).catch((error) => {
+      console.error('Error adding user: ', error);
+    });
+    //this.firestore.collection('users').add(this.user.toJSON()).then((result: any) => {
+     // console.log('Adding user finished', result);
+    //});
   }
 
 }

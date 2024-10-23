@@ -9,12 +9,13 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { User } from '../../models/user.class';
+import {MatCardModule} from '@angular/material/card';
 
 @Component({
   selector: 'app-user',
   standalone: true,
   imports: [MatButtonModule, MatIconModule, MatTooltipModule, MatDialogModule, 
-    MatInputModule, MatFormFieldModule, MatDatepickerModule,
+    MatInputModule, MatFormFieldModule, MatDatepickerModule, MatCardModule,
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss'

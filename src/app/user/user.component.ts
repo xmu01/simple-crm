@@ -15,11 +15,15 @@ import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular
 
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+
+import { doc, onSnapshot } from "firebase/firestore";
+
+import { NgFor } from '@angular/common';
 @Component({
   selector: 'app-user',
   standalone: true,
   imports: [MatButtonModule, MatIconModule, MatTooltipModule, MatDialogModule, 
-    MatInputModule, MatFormFieldModule, MatDatepickerModule, MatCardModule, FormsModule
+    MatInputModule, MatFormFieldModule, MatDatepickerModule, MatCardModule, FormsModule, NgFor,
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss'
@@ -36,15 +40,26 @@ export class UserComponent {
   }
 
   ngOnInit(): void {
-    collection(this.firestore, 'users').valueChanges.subscribe((changes: any) => {
-      console.log('Received changes from database', changes);
-    });
+    const usersCollection = collection(this.firestore, 'users');
 
-    
+    onSnapshot(usersCollection, (snapshot) => {
+      console.log('Received changes from database', snapshot);
+
+      snapshot.docChanges().forEach((change) => {
+        console.log( 'Document changed:', change.doc.data(), 'NutzerID:',change.doc.id );
+        this.allUsers.push(change.doc.data());
+        this.allUserIds.push(change.doc.id);
+        
+        
+      });
+    }, (error) => {
+      console.error('Error listening for changes:', error);
+    });
   }
 
-
   user = new User();
+  allUsers: any[] = [];
+  allUserIds: string[] = []; // Array to store user IDs (Um die Firebase IDs der User zu speichern)
 
   readonly dialog = inject(MatDialog);
 

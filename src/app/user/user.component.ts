@@ -46,8 +46,19 @@ export class UserComponent {
       console.log('Received changes from database', snapshot);
 
       snapshot.docChanges().forEach((change) => {
-        console.log( 'Document changed:', change.doc.data(),change.doc.id );
-        this.allUsers.push(change.doc.data());
+        //console.log( 'Document changed:', change.doc.data(),change.doc.id );
+
+        const userData = change.doc.data();
+        const userId = change.doc.id;
+
+        //Um jz userData und userId zu kombinieren und gemeinsam zu pushen: 
+        const user = new User( { ...userData, id: userId } );
+
+        console.log('Document changed:', user);
+
+        this.allUsers.push(user);
+
+        //this.allUsers.push(change.doc.data());
         //this.allUsers.push(change.doc.id);
         
         
@@ -58,7 +69,7 @@ export class UserComponent {
   }
 
   user = new User();
-  allUsers: any[] = [];
+  allUsers: User[] = [];
   //allUserIds: string[] = []; // Array to store user IDs (Um die Firebase IDs der User zu speichern)
 
   readonly dialog = inject(MatDialog);

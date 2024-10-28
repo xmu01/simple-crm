@@ -19,11 +19,14 @@ import { Observable } from 'rxjs';
 import { doc, onSnapshot } from "firebase/firestore";
 
 import { NgFor } from '@angular/common';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+
 @Component({
   selector: 'app-user',
   standalone: true,
   imports: [MatButtonModule, MatIconModule, MatTooltipModule, MatDialogModule, 
-    MatInputModule, MatFormFieldModule, MatDatepickerModule, MatCardModule, FormsModule, NgFor,
+    MatInputModule, MatFormFieldModule, MatDatepickerModule, MatCardModule, FormsModule, NgFor, RouterLink, RouterLinkActive, RouterOutlet,
+    
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss'
@@ -52,7 +55,7 @@ export class UserComponent {
         const userId = change.doc.id;
 
         //Um jz userData und userId zu kombinieren und gemeinsam zu pushen: 
-        const user = new User( { ...userData, id: userId } );
+        const user = new User( { ...userData, id: userId } ); //WICHTIG. Die 3 Punkte sind sehr wichtig, damit alles funktioniert
 
         console.log('Document changed:', user);
 

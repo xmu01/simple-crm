@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, Input } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { MatTooltipModule, TooltipComponent} from '@angular/material/tooltip';
@@ -26,7 +26,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [MatButtonModule, MatIconModule, MatTooltipModule, MatDialogModule, 
     MatInputModule, MatFormFieldModule, MatDatepickerModule, MatCardModule, FormsModule, NgFor, RouterLink, RouterLinkActive, RouterOutlet,
-    
+
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss'
@@ -81,4 +81,7 @@ export class UserComponent {
     const dialogRef = this.dialog.open(DialogAddUserComponent);
   }
   
+
+  
+
 }

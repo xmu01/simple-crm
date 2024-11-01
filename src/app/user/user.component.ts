@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Input } from '@angular/core';
+import { Component, inject, OnInit, Input, NgZone } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { MatTooltipModule, TooltipComponent} from '@angular/material/tooltip';
@@ -33,21 +33,28 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 })
 export class UserComponent {
  
-  firestore: Firestore = inject(Firestore);
+  user = new User();
+  allUsers: User[] = [];
+  //allUserIds: string[] = []; // Array to store user IDs (Um die Firebase IDs der User zu speichern)
+
+  readonly dialog = inject(MatDialog);
   
+  firestore: Firestore = inject(Firestore);
   items$: Observable<any[]>;
 
-  constructor() {
-    const aCollection = collection(this.firestore, 'items')
+  constructor(private ngZone: NgZone) {
+    const aCollection = collection(this.firestore, 'items');
     this.items$ = collectionData(aCollection);
   }
 
+  /*
   ngOnInit(): void {
     const usersCollection = collection(this.firestore, 'users');
 
     onSnapshot(usersCollection, (snapshot) => {
       console.log('Received changes from database', snapshot);
 
+      this.allUsers = []; // Leert die Liste von allUsers um anschließend neue Daten zu adden
       snapshot.docChanges().forEach((change) => {
         //console.log( 'Document changed:', change.doc.data(),change.doc.id );
 
@@ -69,17 +76,37 @@ export class UserComponent {
     }, (error) => {
       console.error('Error listening for changes:', error);
     });
-  }
+  } */
 
-  user = new User();
-  allUsers: User[] = [];
-  //allUserIds: string[] = []; // Array to store user IDs (Um die Firebase IDs der User zu speichern)
 
-  readonly dialog = inject(MatDialog);
+    
+    ngOnInit(): void {
+      const usersCollection = collection(this.firestore, 'users');
+  
+      onSnapshot(usersCollection, (snapshot) => {
+        console.log('Received changes from database', snapshot);
+  
+        // Die Änderungen in einem stabilen Kontext von NgZone ausführen
+        this.ngZone.run(() => {
+          // Leere die Liste und füge die neuesten Daten hinzu
+          this.allUsers = [];
+          snapshot.forEach((doc) => {
+            const userData = doc.data();
+            const userId = doc.id;
+            const user = new User({ ...userData, id: userId });
+            this.allUsers.push(user);
+          });
+        });
+  
+        console.log('Updated users list:', this.allUsers);
+      }, (error) => {
+        console.error('Error listening for changes:', error);
+      });
+    } 
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogAddUserComponent);
-  }
+  }  
   
 
   

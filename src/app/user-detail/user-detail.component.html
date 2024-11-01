@@ -3,8 +3,8 @@
     <img src="./assets/img/pfp.png" alt="">
     <div class="user-details">
         
-       <h2>Muhammed Ahmed</h2>
-        <p>momo&#64;momomail.com</p>
+       <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+        <p>{{ user.email }}</p>
     </div>
 </mat-card>
 
@@ -12,9 +12,7 @@
     <mat-card-header>
         <mat-card-title>Address</mat-card-title>
     </mat-card-header>    
-
     <mat-card-content>
-        Musterstr. 23 <br>
-        Muster City <br>
-    </mat-card-content>
+        <br> {{ user!.street }} <br> {{ user!.zipCode }} <br> {{ user!.city }}
+     </mat-card-content>
 </mat-card>

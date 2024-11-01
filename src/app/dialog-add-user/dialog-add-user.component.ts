@@ -48,7 +48,15 @@ export class DialogAddUserComponent {
  
 
   saveUser() {
-    this.user.birthDate = this.birthDate.getTime();
+
+    if (this.birthDate) {
+      this.user.birthDate = this.birthDate.getTime();
+    } else {
+      console.error('Birthdate is undefined');
+      return;
+    }
+
+    //this.user.birthDate = this.birthDate.getTime();
     console.log('Current user is', this.user);
     
     this.loading = true; // Ab da kommen die Loading Animation und die Input-Felder blenden aus...

@@ -7,11 +7,19 @@ import { Observable } from 'rxjs';
 import { NgFor } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { User } from '../../models/user.class';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatDialogModule, MatDialog} from '@angular/material/dialog'; //Das Wort "MatDialog" ist nur ein Service, kein Modul und darf somit nicht in die Imports unten rein
+import { DialogEditAddressComponent } from '../dialog-edit-address/dialog-edit-address.component';
+import { DialogEditUserComponent } from '../dialog-edit-user/dialog-edit-user.component';
+
 
 @Component({
   selector: 'app-user-detail',
   standalone: true,
-  imports: [ MatCardModule, NgFor, RouterLink, RouterLinkActive, RouterOutlet, ],
+  imports: [ MatCardModule, NgFor, RouterLink, RouterLinkActive, RouterOutlet, MatIconModule, 
+    MatMenuModule, MatDialogModule, 
+  ],
   templateUrl: './user-detail.component.html',
   styleUrl: './user-detail.component.scss'
 })
@@ -21,6 +29,8 @@ export class UserDetailComponent {
   user: User =  new User(); // Tipp: klappt auch ohne grünes User ALERT: ist besser als das alte, dumme : user: User | null = null;
 
   firestore: Firestore = inject(Firestore);
+
+  readonly dialog = inject(MatDialog);
 
   constructor(private route: ActivatedRoute) { }
 
@@ -83,4 +93,19 @@ export class UserDetailComponent {
       }
     }
   
+
+    editMenu() {
+      const dialogRef = this.dialog.open(DialogEditAddressComponent);
+      dialogRef.componentInstance.user = new User(this.user.toJSON()); //toJSON notwendig und auch new User() statt this.user alleine notwendig, damit nicht das Pronlem mit Schwanthalerstr. kommt, also wenn man bei Cancel ein Input-Feld trotzdem Echtzeit bearbeitet, was wir nicht wollen. 
+      dialogRef.componentInstance.userId = this.userId; // Damit die edit-address-comp. weiß welches Dokument bearbeitet werden muss anhand der ID
+    }
+
+
+    editUserDetail() {
+      const dialogRef = this.dialog.open(DialogEditUserComponent);
+      dialogRef.componentInstance.user = new User(this.user.toJSON()); // Mit dieser Syntax erstellen wir eine Kopie von unserem Nutzer!
+      dialogRef.componentInstance.userId = this.userId; // Damit die edit-user-comp. weiß welches Dokument bearbeitet werden muss anhand der ID
+    }
+
+
 }

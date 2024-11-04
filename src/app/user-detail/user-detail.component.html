@@ -2,6 +2,14 @@
 
     <img src="./assets/img/pfp.png" alt="">
     <div class="user-details">
+
+        <button mat-icon-button class="pin-right-upper-corner" [matMenuTriggerFor]="userMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+
+          <mat-menu #userMenu="matMenu">
+            <button mat-menu-item  (click)="editUserDetail()">Edit</button>
+          </mat-menu>
         
        <h2>{{ user.firstName }} {{ user.lastName }}</h2>
         <p>{{ user.email }}</p>
@@ -10,6 +18,14 @@
 
 <mat-card class="mt-32">
     <mat-card-header>
+        <button mat-icon-button class="pin-right-upper-corner" [matMenuTriggerFor]="addressMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+
+          <mat-menu #addressMenu="matMenu">
+            <button mat-menu-item (click)="editMenu()">Edit</button>
+          </mat-menu>
+          
         <mat-card-title>Address</mat-card-title>
     </mat-card-header>    
     <mat-card-content>

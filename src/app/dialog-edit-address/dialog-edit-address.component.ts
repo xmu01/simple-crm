@@ -34,7 +34,7 @@ export class DialogEditAddressComponent {
   firestore: Firestore = inject(Firestore);
   items$: Observable<any[]>;
 
-  user!: User;
+  user: User = new User();
   userId!: string; //Testen ob das so passt..
 
   loading = false;

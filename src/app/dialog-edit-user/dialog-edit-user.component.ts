@@ -36,7 +36,7 @@ export class DialogEditUserComponent {
   firestore: Firestore = inject(Firestore);
   items$: Observable<any[]>;
 
-  user! : User;
+  user : User = new User();
   userId! : string;
   birthDate!: Date;
   loading = false;

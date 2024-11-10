@@ -24,7 +24,7 @@ import { Observable } from 'rxjs';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'simple-crm';
+  //title = 'simple-crm';
   firestore: Firestore = inject(Firestore);
   items$: Observable<any[]>;
 
